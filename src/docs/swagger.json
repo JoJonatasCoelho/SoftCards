@@ -1,14 +1,25 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Express Auth API",
+    "title": "SoftCards API",
     "version": "1.0.0",
-    "description": "Documentação da API de autenticação com Express e JWT"
+    "description": "Documentação da API para o sistema de estudos SoftCards, com autenticação JWT, decks e flashcards."
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Use o token JWT obtido ao fazer login para acessar as rotas protegidas. \nExemplo: `<token>`"
+      }
+    }
   },
   "paths": {
     "/api/usuarios/register": {
       "post": {
         "summary": "Registrar novo usuário",
+        "tags": ["Usuários"],
         "requestBody": {
           "required": true,
           "content": {
@@ -16,24 +27,23 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "nome": { "type": "string" },
-                  "email": { "type": "string" },
-                  "password": { "type": "string" }
-                },
-                "required": ["name", "email", "password"]
+                  "name": { "type": "string", "example": "Jhon Doe" },
+                  "email": { "type": "string", "example": "jhon.doe@example.com" },
+                  "password": { "type": "string", "example": "password123" }
+                }
               }
             }
           }
         },
         "responses": {
-          "201": { "description": "Usuário criado" },
-          "400": { "description": "Erro de validação" }
+          "201": { "description": "Usuário criado" }
         }
       }
     },
     "/api/usuarios/login": {
       "post": {
         "summary": "Autenticar usuário",
+        "tags": ["Usuários"],
         "requestBody": {
           "required": true,
           "content": {
@@ -41,17 +51,161 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": { "type": "string" },
-                  "password": { "type": "string" }
-                },
-                "required": ["email", "password"]
+                  "email": { "type": "string", "example": "jhon.doe@example.com" },
+                  "password": { "type": "string", "example": "password123" }
+                }
               }
             }
           }
         },
         "responses": {
-          "200": { "description": "Token JWT retornado" },
-          "401": { "description": "Falha na autenticação" }
+          "200": { "description": "Token JWT retornado" }
+        }
+      }
+    },
+    "/api/decks": {
+      "post": {
+        "summary": "Criar um novo deck",
+        "tags": ["Decks"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "Verbos em Inglês" },
+                  "description": { "type": "string", "example": "Deck para estudar os verbos irregulares." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Deck criado" }
+        }
+      },
+      "get": {
+        "summary": "Listar todos os decks do usuário",
+        "tags": ["Decks"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de decks" }
+        }
+      }
+    },
+    "/api/decks/{deckId}": {
+      "patch": {
+        "summary": "Atualizar um deck",
+        "tags": ["Decks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deckId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Deck atualizado" }
+        }
+      },
+      "delete": {
+        "summary": "Deletar um deck (e seus cards)",
+        "tags": ["Decks"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deckId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Deck deletado" }
+        }
+      }
+    },
+    "/api/decks/{deckId}/cards": {
+      "post": {
+        "summary": "Adicionar um flashcard a um deck",
+        "tags": ["Flashcards"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deckId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": { "type": "string", "example": "To go" },
+                  "answer": { "type": "string", "example": "Went / Gone" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Flashcard criado" }
+        }
+      },
+      "get": {
+        "summary": "Listar todos os flashcards de um deck",
+        "tags": ["Flashcards"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deckId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Lista de flashcards" }
+        }
+      }
+    },
+    "/api/decks/{deckId}/cards/{cardId}": {
+      "patch": {
+        "summary": "Atualizar um flashcard",
+        "tags": ["Flashcards"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deckId", "in": "path", "required": true, "schema": { "type": "string" }, "description": "ID do deck" },
+          { "name": "cardId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "question": { "type": "string" },
+                  "answer": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Flashcard atualizado" }
+        }
+      },
+      "delete": {
+        "summary": "Deletar um flashcard",
+        "tags": ["Flashcards"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          { "name": "deckId", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "cardId", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Flashcard deletado" }
         }
       }
     }
