@@ -6,15 +6,15 @@ const verifyJWT = require("../middlewares/auth");
 
 router.use(verifyJWT);
 router.post("/", [
-    body("question").notEmpty().withMessage("A pergunta é obrigatória"),
-    body("answer").notEmpty().withMessage("A resposta é obrigatória"),
+  body("question").notEmpty().withMessage("A pergunta é obrigatória"),
+  body("answer").notEmpty().withMessage("A resposta é obrigatória"),
 ], flashcardController.create);
 
 router.get("/", flashcardController.getAllFromDeck);
 
 router.patch("/:cardId", [
-    body("question").optional().notEmpty().withMessage("A pergunta não pode ser vazia"),
-    body("answer").optional().notEmpty().withMessage("A resposta não pode ser vazia"),
+  body("question").optional().notEmpty().withMessage("A pergunta não pode ser vazia"),
+  body("answer").optional().notEmpty().withMessage("A resposta não pode ser vazia"),
 ], flashcardController.update);
 
 router.delete("/:cardId", flashcardController.remove);
