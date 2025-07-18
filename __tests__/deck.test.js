@@ -49,7 +49,7 @@ describe('Deck Tests', () => {
   it('deve criar um novo deck', async () => {
     const deckData = {
       name: 'Test Deck',
-      description: 'This is a test deck'
+      description: 'esse é um deck de teste'
     };
 
       const response = await request(app)
@@ -92,11 +92,11 @@ describe('Deck Tests', () => {
   });
 
   it('deve atualizar um deck se o usuário for o proprietário', async () => {
-    const deck = await Deck.create({ name: 'Deck to Update', owner: userId });
+    const deck = await Deck.create({ name: 'Deck pra atualizar', owner: userId });
 
     const updatedData = {
-      name: 'Updated Deck Name',
-      description: 'Updated description'
+      name: 'Nome atualizado',
+      description: 'Descrição atualizada'
     };
 
     const response = await request(app)
@@ -111,7 +111,7 @@ describe('Deck Tests', () => {
   });
 
   it('deve deletar um deck se o usuário for o proprietário', async () => {
-    const deck = await Deck.create({ name: 'Deck to Delete', owner: userId });
+    const deck = await Deck.create({ name: 'Deck para deletar', owner: userId });
 
     const response = await request(app)
       .delete(`/api/decks/${deck._id}`)
