@@ -60,7 +60,7 @@ exports.remove = async (req, res, next) => {
         if (!result) {
             throw new ApiError(404, "Flashcard não encontrado ou acesso não permitido.", true);
         }
-        res.status(200).json({ message: "Flashcard deletado com sucesso." });
+        res.status(204).json();
     } catch (err) {
         next(err);
     }
