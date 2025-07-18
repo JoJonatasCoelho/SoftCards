@@ -1,4 +1,5 @@
 const Deck = require('../models/Deck');
+const Flashcard = require('../models/Flashcard');
 
 async function createDeck(userId, deckData) {
   const deck = new Deck({
