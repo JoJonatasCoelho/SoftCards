@@ -1,7 +1,7 @@
 const express = require("express");
 const { body } = require("express-validator");
 const router = express.Router();
-const { register, login } = require("../controllers/userController");
+const { register, login, refreshToken } = require("../controllers/userController");
 const verifyJWT = require("../middlewares/auth");
 
 router.post("/register", [
@@ -14,6 +14,8 @@ router.post("/login", [
   body("email").isEmail().withMessage("Email inválido"),
   body("password").notEmpty().withMessage("Senha é obrigatória")
 ], login);
+
+router.post("/refresh-token", refreshToken);
 
 router.get("/me", verifyJWT, (req, res) => {
   res.json({ user: req.user });
