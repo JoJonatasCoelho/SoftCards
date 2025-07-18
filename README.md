@@ -79,7 +79,8 @@
 
      # Segredo para gerar os tokens JWT
      JWT_SECRET=seu_segredo_super_secreto
-
+     # Segredo para gerar os refresh tokens
+     JWT_REFRESH_SECRET=outro_segredo_super_secreto
      ```
 
 ### Executando a Aplicação
@@ -91,7 +92,7 @@ npm start
 
 ```
 
-**O servidor estará rodando em **`http://localhost:3000`.
+**O servidor estará rodando em**`http://localhost:3000`.
 
 ## 🐳 Executando com Docker
 
