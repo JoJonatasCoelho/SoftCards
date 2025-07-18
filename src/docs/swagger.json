@@ -16,7 +16,7 @@
     }
   },
   "paths": {
-    "/api/usuarios/register": {
+    "/api/users/register": {
       "post": {
         "summary": "Registrar novo usuário",
         "tags": ["Usuários"],
@@ -40,7 +40,7 @@
         }
       }
     },
-    "/api/usuarios/login": {
+    "/api/users/login": {
       "post": {
         "summary": "Autenticar usuário",
         "tags": ["Usuários"],
@@ -60,6 +60,31 @@
         },
         "responses": {
           "200": { "description": "Token JWT retornado" }
+        }
+      }
+    },
+    "/api/users/refresh-token": {
+      "post": {
+        "summary": "Gerar um novo access token",
+        "tags": ["Usuários"],
+        "description": "Use um refreshToken válido para obter um novo accessToken sem precisar fazer login novamente.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Novo accessToken retornado" },
+          "401": { "description": "Refresh token não fornecido" },
+          "403": { "description": "Refresh token inválido ou expirado" }
         }
       }
     },
