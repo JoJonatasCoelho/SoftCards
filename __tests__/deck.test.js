@@ -35,17 +35,17 @@ beforeEach(async () => {
     .send({name: user.name, email: user.email, password: user.password});
   userId = userResponse.body._id;
 
-  const res = await request(app)
+  const loginResponse = await request(app)
     .post('/api/users/login')
     .send({
         email: 'testuser@example.com',
         password: 'password123'
     });
 
-  authToken = res.body.token;
+  authToken = loginResponse.body.token.accessToken;
 });
 
-describe('Deck Tests', () => { 
+describe('Deck Tests', () => {
   it('deve criar um novo deck', async () => {
     const deckData = {
       name: 'Test Deck',
