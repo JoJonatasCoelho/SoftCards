@@ -31,21 +31,21 @@ beforeEach(async () => {
   await User.deleteMany({});
   await Deck.deleteMany({});
   await Flashcard.deleteMany({});
-  
+
   const userResponse = await request(app)
     .post('/api/users/register')
     .send(testUser);
   userId = userResponse.body._id;
-  
+
   const loginResponse = await request(app)
     .post('/api/users/login')
     .send({
     email: testUser.email,
     password: testUser.password,
     });
-  
-  authToken = loginResponse.body.token;
-  
+
+  authToken = loginResponse.body.token.accessToken;
+
   const deckResponse = await request(app)
     .post('/api/decks')
     .set('Authorization', `Bearer ${authToken}`)
@@ -72,7 +72,7 @@ beforeEach(async () => {
       expect(response.body.question).toBe(cardData.question);
       expect(response.body.answer).toBe(cardData.answer);
       expect(response.body.deck.toString()).toBe(deckId.toString());
-      
+
       const flashcard = await Flashcard.findById(response.body._id);
       expect(flashcard).not.toBeNull();
     });

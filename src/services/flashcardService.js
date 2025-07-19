@@ -1,5 +1,6 @@
 const Flashcard = require('../models/Flashcard');
 const Deck = require('../models/Deck');
+const ApiError = require('../utils/ApiError');
 
 async function addCardToDeck(userId, deckId, cardData) {
   const deck = await Deck.findOne({ _id: deckId, owner: userId });
@@ -31,8 +32,13 @@ async function updateCard(cardId, userId, updateData) {
 }
 
 async function deleteCard(cardId, userId) {
-  const query = { _id: cardId, owner: userId };
-  return await Flashcard.findOneAndDelete(query);
+  try {
+      const query = { _id: cardId, owner: userId };
+      const result = await Flashcard.findOneAndDelete(query);
+      return result;
+  } catch (error) {
+      throw new ApiError(400, "Erro ao deletar flashcard, requisição mal formatada", true);
+  }
 }
 
 module.exports = {
