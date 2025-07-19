@@ -24,12 +24,17 @@ async function updateDeck(deckId, userId, updateData) {
 }
 
 async function deleteDeck(deckId, userId) {
-  const deck = await Deck.findOne({ _id: deckId, owner: userId });
-  if (!deck) {
-      return null;
+  try{
+    const deck = await Deck.findOne({ _id: deckId, owner: userId });
+    if (!deck) {
+        return null;
+    }
+    await Flashcard.deleteMany({ deck: deckId });
+    const result = await Deck.findByIdAndDelete(deckId);
+    return result;
+  } catch (error) {
+    throw new ApiError(400, "Erro ao deletar deck, requisição mal formatada", true);
   }
-  await Flashcard.deleteMany({ deck: deckId });
-  return await Deck.findByIdAndDelete(deckId);
 }
 
 module.exports = {
