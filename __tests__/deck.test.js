@@ -104,7 +104,6 @@ describe('Deck Tests', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .send({ name: updatedData.name, description: updatedData.description });
 
-    console.log("error: " + response.body.error);
     expect(response.statusCode).toBe(200);
     expect(response.body.name).toBe(updatedData.name);
     expect(response.body.description).toBe(updatedData.description);
